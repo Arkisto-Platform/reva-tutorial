@@ -1,0 +1,11 @@
+{
+    "name": "reva-tutorial",
+    "version": "1.0.0",
+    "description": "A tutorial for working with reva via the cs3apis",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Marco La Rosa",
+    "license": "ISC"
+}
