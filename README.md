@@ -25,20 +25,25 @@ The CS3 API documentation is at
 ### Versions
 
 From the CS3API repo page ([https://github.com/cs3org/cs3apis](https://github.com/cs3org/cs3apis))
-there are a number of language bindings referenced. Note that the version numvers in those
+there are a number of language bindings referenced. Note that the version numbers in those
 respective repo's are `not` consistent. To see which version is built look for the commit message
 like `Synced to https://github.com/cs3org/cs3apis/tree/{commit id}`
 
 ## Code examples
 
-Code examples for authenticate, whoAmI, uploadFile and downloadFile are in
-[src/index.js](src/index.js).
+Code examples for
+[authenticate](https://github.com/Arkisto-Platform/reva-tutorial/blob/master/src/index.js#L24),
+[whoAmI](https://github.com/Arkisto-Platform/reva-tutorial/blob/master/src/index.js#L38),
+[listFolder](https://github.com/Arkisto-Platform/reva-tutorial/blob/master/src/index.js#L47),
+[uploadFile](https://github.com/Arkisto-Platform/reva-tutorial/blob/master/src/index.js#L114) and
+[downloadFile](https://github.com/Arkisto-Platform/reva-tutorial/blob/master/src/index.js#L83) are
+in [src/index.js](src/index.js).
 
 ### Requests to reva
 
 There are two types of requests when dealing with reva: GRPC and HTTP. GRPC is used as the
 communication channel (authenticate, create shares, setup uploads / downloads etc) whilst http is
-used to performing certain operations (actually do the download / upload etc).
+used to perform certain operations (actually do the download / upload etc).
 
 Look at the methods `uploadFile` and `downloadFile` to see this in action. First there are the GRPC
 operations which define what we want to do and these are then following by standard HTTP requests to
@@ -52,14 +57,15 @@ The basic pattern is as follows:
 -   set up the request type
 -   pass the request to the client to action
 
-Following is an authentication example (from [src/index.js](src/index.js)):
+Following is an authentication example (from
+[src/index.js](https://github.com/Arkisto-Platform/reva-tutorial/blob/master/src/index.js#L24)):
 
 ```
 async function authenticate({ username, password, gateway }) {
     // get the client
     const client = new GatewayAPIClient(gateway, credentials.createInsecure(), {});
 
-    // get the authenticate method from the client - promisified
+    // get the promisified authenticate method from the client
     //  promisifyAll method in src/index
     const { authenticate } = promisifyAll(client);
 
@@ -71,7 +77,7 @@ async function authenticate({ username, password, gateway }) {
     req.setClientId(username);
     req.setClientSecret(password);
 
-    // pass the request object to the authenticat method
+    // pass the request object to the authenticate method
     let response = await authenticate(req);
 
     // extract the require info from the response
@@ -120,19 +126,21 @@ export async function listFolder({ gateway, token, folder = "/" }) {
 
     // get the client and extract the methods you need
     const client = new GatewayAPIClient(gateway, credentials.createInsecure(), {});
-    const { listContainer, stat } = promisifyAll(client);
+    const { listContainer } = promisifyAll(client);
 
     // in this example we're doing a list folder request so
-    // * set up a reference with the path we want to list
+
+
+    // 1. set up a reference with the path we want to list
     let ref = new Reference().setPath(folder);
 
-    // set up the request
+    // 2. set up the request
     let req = new ListContainerRequest();
 
-    // set up the reference in the request
+    // 3. set up the reference in the request
     req.setRef(ref);
 
-    // pass the request and the `meta` object with the token to the listContainer method
+    // 4. pass the request and the `meta` object with the token to the listContainer method
     let containers = await listContainer(req, meta);
 
     ...
